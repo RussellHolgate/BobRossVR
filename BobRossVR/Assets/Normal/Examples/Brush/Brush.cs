@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
+using NVIDIA.Flex;
 
 public class Brush : MonoBehaviour {
     // Prefab to instantiate when we draw a new brush stroke
@@ -24,33 +25,42 @@ public class Brush : MonoBehaviour {
         bool handIsTracking = UpdatePose(node, ref _handPosition, ref _handRotation);
 
         // Figure out if the trigger is pressed or not
-        bool triggerPressed = Input.GetAxisRaw(trigger) > 0.1f;
+        bool triggerPressed = Input.GetAxisRaw(trigger) > 0.5f;
+
+        gameObject.GetComponent<Transform>().position = _handPosition;
+        gameObject.GetComponent<Transform>().rotation = _handRotation;
 
         // If we lose tracking, stop drawing
         if (!handIsTracking)
             triggerPressed = false;
 
         // If the trigger is pressed and we haven't created a new brush stroke to draw, create one!
-        if (triggerPressed && _activeBrushStroke == null) {
+        if (triggerPressed && gameObject.GetComponentInChildren<FlexSourceActor>().container.fluidIndexCount < gameObject.GetComponentInChildren<FlexSourceActor>().container.maxParticles) {
             // Instantiate a copy of the Brush Stroke prefab.
-            GameObject brushStrokeGameObject = Instantiate(_brushStrokePrefab);
+            //GameObject brushStrokeGameObject = Instantiate(_brushStrokePrefab);
 
+            gameObject.GetComponentInChildren<FlexSourceActor>().isActive = true;
+            
             // Grab the BrushStroke component from it
-            _activeBrushStroke = brushStrokeGameObject.GetComponent<BrushStroke>();
+            //_activeBrushStroke = brushStrokeGameObject.GetComponent<BrushStroke>();
 
             // Tell the BrushStroke to begin drawing at the current brush position
-            _activeBrushStroke.BeginBrushStrokeWithBrushTipPoint(_handPosition, _handRotation);
+            //_activeBrushStroke.BeginBrushStrokeWithBrushTipPoint(_handPosition, _handRotation);
+        }
+        else
+        {
+            gameObject.GetComponentInChildren<FlexSourceActor>().isActive = false;
         }
 
         // If the trigger is pressed, and we have a brush stroke, move the brush stroke to the new brush tip position
-        if (triggerPressed)
-            _activeBrushStroke.MoveBrushTipToPoint(_handPosition, _handRotation);
+        //if (triggerPressed)
+        //    _activeBrushStroke.MoveBrushTipToPoint(_handPosition, _handRotation);
 
         // If the trigger is no longer pressed, and we still have an active brush stroke, mark it as finished and clear it.
-        if (!triggerPressed && _activeBrushStroke != null) {
-            _activeBrushStroke.EndBrushStrokeWithBrushTipPoint(_handPosition, _handRotation);
-            _activeBrushStroke = null;
-        }
+        //if (!triggerPressed && _activeBrushStroke != null) {
+        //    _activeBrushStroke.EndBrushStrokeWithBrushTipPoint(_handPosition, _handRotation);
+        //    _activeBrushStroke = null;
+        //}
     }
 
     //// Utility
