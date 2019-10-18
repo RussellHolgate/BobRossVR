@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: FlexDrawFluid
-  m_Shader: {fileID: 4800000, guid: 917b9006eb00c1a44bdb6144e5662825, type: 3}
+  m_Shader: {fileID: 4800000, guid: f4dc11f41f8ff354087865a671be50d7, type: 3}
   m_ShaderKeywords: _EMISSION
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
