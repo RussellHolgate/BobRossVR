@@ -124,7 +124,7 @@ CGPROGRAM
             fren = 0.0 + 0.6 * fren;
             o.Albedo = 0;//c.rgb * (fren);
             o.Emission = c.rgb * (1 - fren);
-            o.Specular = _Specular * (fren);
+			o.Specular = 0.0;// _Specular * (fren);
             o.Smoothness = _Glossiness;
             o.Alpha = 0;//c.a;
         }
@@ -385,7 +385,7 @@ CGPROGRAM
             fixed4 c = tex2D (_FluidBackground, IN.uv_FluidBackground) * _Color;
             o.Albedo = c.rgb;
             // Specular and smoothness come from slider variables
-            o.Specular = _Specular;
+			o.Specular = 0.0;// _Specular;
             o.Smoothness = _Glossiness;
             o.Alpha = c.a;
         }
@@ -546,7 +546,7 @@ CGPROGRAM
             fixed4 c = tex2D (_FluidBackground, IN.uv_FluidBackground);// * _Color;
             o.Albedo = c.rgb; //o.Emission = 1;//c.rgb;
             // Specular and smoothness come from slider variables
-            o.Specular = _Specular;
+			o.Specular = 0.0;// _Specular;
             o.Smoothness = _Glossiness;
             o.Alpha = c.a;
         }
@@ -779,7 +779,7 @@ CGPROGRAM
             fixed4 c = tex2D (_FluidBackground, IN.uv_FluidBackground) * _Color;
             o.Albedo = c.rgb;
             // Specular and smoothness come from slider variables
-            o.Specular = _Specular;
+			o.Specular = 0.0;//_Specular;
             o.Smoothness = _Glossiness;
             o.Alpha = 1;//c.a;
         }
@@ -914,7 +914,7 @@ CGPROGRAM
             fixed4 c = tex2D (_FluidBackground, IN.uv_FluidBackground);// * _Color;
             o.Albedo = c.rgb; o.Emission = c.rgb;
             // Specular and smoothness come from slider variables
-            o.Specular = _Specular;
+			o.Specular = 0.0;// _Specular;
             o.Smoothness = _Glossiness;
             o.Alpha = c.a;
         }

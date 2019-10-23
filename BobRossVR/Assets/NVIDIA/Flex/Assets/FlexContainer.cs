@@ -772,6 +772,7 @@ namespace NVIDIA.Flex
 
         void UpdateDrawFluid(ParticleData _particleData)
         {
+            //Debug.Log("UpdateDrawFluid:");
             if (!m_fluid && m_drawFluidHelper)
             {
                 DestroyImmediate(m_drawFluidHelper.gameObject);

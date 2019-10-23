@@ -231,25 +231,7 @@ namespace NVIDIA.Flex
       if (m_scene && m_scene.container && m_fluidMaterial)
       {
         int[] indices = m_scene.container.fluidIndices;
-        int indexCount = m_scene.container.fluidIndexCount * 2;
-
-        // Fixing NVidia's mistakes:
-        // vvvvvvvv
-        //if (m_indexBuffer != null && indexCount != m_indexBuffer.count) // @@@
-        //{
-        //    m_indexBuffer.Release();
-        //    m_indexBuffer = null;
-        //}
-        //if (m_indexBuffer == null && indexCount > 0)
-        //{
-        //    m_indexBuffer = new ComputeBuffer(indexCount, sizeof(int));
-        //    m_mesh.SetIndices(new int[indexCount], MeshTopology.Points, 0);
-        //}
-        //if (m_indexBuffer != null)
-        //{
-        //    m_indexBuffer.SetData(indices);
-        //}
-
+        int indexCount = m_scene.container.fluidIndexCount;
         if (m_indexBuffer == null)
         {
           if (indexCount > 0)
@@ -267,8 +249,6 @@ namespace NVIDIA.Flex
           }
           m_indexBuffer.SetData(indices);
         }
-
-        // ^^^^^^^^
 
         Vector3 boundsMin = Vector3.one * 1e10f, boundsMax = Vector3.one * 1e10f;
         if (indexCount > 0)

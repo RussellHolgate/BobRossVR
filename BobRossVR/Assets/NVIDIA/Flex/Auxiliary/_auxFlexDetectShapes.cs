@@ -38,6 +38,7 @@ namespace NVIDIA.Flex
     [AddComponentMenu("")]
     public class _auxFlexDetectShapes : MonoBehaviour
     {
+        //bool firstTime = true;
         #region Messages
 
         void OnEnable()
@@ -73,6 +74,8 @@ namespace NVIDIA.Flex
         public void UpdateShapes(FlexContainer.ParticleData _particleData)
         {
             int colliderCount = 0;
+            
+            
 
             foreach (var item in m_colliders)
             {
@@ -111,6 +114,23 @@ namespace NVIDIA.Flex
                     Collider collider = item.Key;
                     ShapeData shapeData = item.Value;
 
+                    //Debug.Log("NVIDIA:_auxFlexDetectShapes.cs:UpdateShapes()");
+                    //if (firstTime)
+                    //{
+                    //    firstTime = false;
+                    //    Vector4[] destination = new Vector4[1]; //undefined behaviour
+                    //    FlexUtils.FastCopy(_particleData.particleData.particles, destination);
+                    //    if (collider is SphereCollider)
+                    //    {
+                    //        var min = collider.bounds.min;
+                    //        var max = collider.bounds.min;
+                    //        
+                    //        foreach (var particle in destination)
+                    //        {
+                    //            //TODO: spher to box collision
+                    //        }
+                    //    }
+                    //}
                     if (!(collider is SphereCollider) && !(collider is CapsuleCollider) && !(collider is BoxCollider) && !(collider is MeshCollider))
                         continue;
 
@@ -143,7 +163,8 @@ namespace NVIDIA.Flex
             Vector3 lower = Vector3.zero, upper = Vector3.zero;
             FlexUtils.FastCopy(_particleData.particleData.lower, 0, ref lower, 0, sizeof(float) * 3);
             FlexUtils.FastCopy(_particleData.particleData.upper, 0, ref upper, 0, sizeof(float) * 3);
-
+            //Debug.Log("lower:" + lower);
+            //Debug.Log("upper:" + upper);
             if (lower.x < upper.x && lower.y < upper.y && lower.z < upper.z)
             {
                 m_trigger.transform.position = (upper + lower) * 0.5f;
