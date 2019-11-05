@@ -39,7 +39,7 @@ MonoBehaviour:
   m_recreateSolver: 0
   m_substepCount: 2
   m_iterationCount: 5
-  m_gravity: {x: 0, y: -8.5, z: 8}
+  m_gravity: {x: 0, y: 0, z: 0}
   m_radius: 0.06
   m_solidRest: 0.04
   m_fluidRest: 0.038
@@ -49,7 +49,7 @@ MonoBehaviour:
   m_restitution: 0
   m_adhesion: 1
   m_sleepThreshold: 1
-  m_maxSpeed: 2
+  m_maxSpeed: 20
   m_maxAcceleration: 2
   m_shockPropagation: 0
   m_dissipation: 0

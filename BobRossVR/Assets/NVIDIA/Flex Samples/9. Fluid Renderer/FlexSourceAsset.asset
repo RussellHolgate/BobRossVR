@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: FlexSourceAsset
   m_EditorClassIdentifier: 
   m_particles: []
-  m_maxParticles: 150000
+  m_maxParticles: 1000
   m_springIndices: 
   m_springCoefficients: []
   m_springRestLengths: []

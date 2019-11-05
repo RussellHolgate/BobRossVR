@@ -38,10 +38,47 @@ namespace NVIDIA.Flex
     [AddComponentMenu("")]
     public class _auxFlexDetectShapes : MonoBehaviour
     {
-        //bool firstTime = true;
-        #region Messages
+		void doUpdateParticles(FlexContainer.ParticleData particleData, Collider collider)
+		{
+			var fluidIndices = particleData.container.fluidIndices;
+			var fluidCount = particleData.container.fluidIndexCount;
 
-        void OnEnable()
+			foreach (var i in fluidIndices)
+			{
+				Vector4 position = particleData.GetParticle(i);
+				Vector3 velocity = particleData.GetVelocity(i);
+
+				if (collider.bounds.SqrDistance(position) < 0.5)
+				{
+					//particleData.SetParticle(i, new Vector4(collider.transform.position.x, collider.transform.position.y, collider.transform.position.z + 0.5f, position.w));
+					particleData.SetVelocity(i, new Vector4(-position.x + collider.transform.position.x, -position.y + collider.transform.position.y, -position.z + collider.transform.position.z) * 200f);
+				}
+			}
+		}
+
+		void onCanvasCollision(FlexContainer.ParticleData particleData, Collider collider)
+		{
+			var fluidIndices = particleData.container.fluidIndices;
+			var fluidCount = particleData.container.fluidIndexCount;
+
+			foreach (var i in fluidIndices)
+			{
+				Vector4 position = particleData.GetParticle(i);
+				Vector3 velocity = particleData.GetVelocity(i);
+
+				Vector3 closest = collider.bounds.ClosestPoint(position);
+
+				if (collider.bounds.SqrDistance(position) < 0.01)
+				{
+					//particleData.SetParticle(i, new Vector4(collider.transform.position.x, collider.transform.position.y, collider.transform.position.z + 0.5f, position.w));
+					particleData.SetVelocity(i, new Vector4(-position.x + closest.x, -position.y + closest.y, -position.z + closest.z) * 0.2f);
+				}
+			}
+		}
+
+		#region Messages
+
+		void OnEnable()
         {
             Create();
         }
@@ -75,13 +112,19 @@ namespace NVIDIA.Flex
         {
             int colliderCount = 0;
             
-            
-
             foreach (var item in m_colliders)
             {
                 Collider collider = item.Key;
 
-                if (!(collider is SphereCollider) && !(collider is CapsuleCollider) && !(collider is BoxCollider) && !(collider is MeshCollider))
+				if (collider is SphereCollider)
+				{
+					doUpdateParticles(_particleData, collider);
+				}
+				else if (collider.name == "Canvas")
+				{
+					onCanvasCollision(_particleData, collider);
+				}
+                else if (/*!(collider is SphereCollider) && */!(collider is CapsuleCollider) && !(collider is BoxCollider) && !(collider is MeshCollider))
                     continue;
 
                 ++colliderCount;
@@ -114,23 +157,7 @@ namespace NVIDIA.Flex
                     Collider collider = item.Key;
                     ShapeData shapeData = item.Value;
 
-                    //Debug.Log("NVIDIA:_auxFlexDetectShapes.cs:UpdateShapes()");
-                    //if (firstTime)
-                    //{
-                    //    firstTime = false;
-                    //    Vector4[] destination = new Vector4[1]; //undefined behaviour
-                    //    FlexUtils.FastCopy(_particleData.particleData.particles, destination);
-                    //    if (collider is SphereCollider)
-                    //    {
-                    //        var min = collider.bounds.min;
-                    //        var max = collider.bounds.min;
-                    //        
-                    //        foreach (var particle in destination)
-                    //        {
-                    //            //TODO: spher to box collision
-                    //        }
-                    //    }
-                    //}
+                    
                     if (!(collider is SphereCollider) && !(collider is CapsuleCollider) && !(collider is BoxCollider) && !(collider is MeshCollider))
                         continue;
 

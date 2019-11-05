@@ -5,82 +5,104 @@ using UnityEngine.XR;
 
 public class Hand : MonoBehaviour
 {
-  public enum HandCode { Left, Right };
-  public HandCode HandType = HandCode.Left;
-  public UniformScaler PlayerScale;
-  public bool UnparentFromVRController = false;
+	public enum HandCode { Left, Right };
+	public HandCode HandType = HandCode.Left;
+	public UniformScaler PlayerScale;
+	public bool UnparentFromVRController = false;
 
-  public enum BehaviourCode { Emit, Push };
-  public BehaviourCode Behaviour = BehaviourCode.Emit;
+	public enum BehaviourCode { Emit, Push };
+	public BehaviourCode Behaviour = BehaviourCode.Emit;
+	private CanvasTriggerHandler TriggerHandler;
 
-  void SetActiveBehaviour()
-  {
-    string n = "";
+	bool isTriggerPressed = false;
 
-    switch (Behaviour)
-    {
-      case BehaviourCode.Emit:
-        n = "PaintEmitter";
-        break;
-      case BehaviourCode.Push:
-        n = "PaintPusher";
-        break;
-    }
+	void SetActiveBehaviour()
+	{
+		string n = "";
 
-    foreach (var child in GetComponentsInChildren<Transform>(true))
-    {
-      if (child.gameObject.tag == "Behaviour")
-        child.gameObject.SetActive(child.gameObject.name == n);
-    }
-  }
+		switch (Behaviour)
+		{
+			case BehaviourCode.Emit:
+				n = "PaintEmitter";
+				break;
+			case BehaviourCode.Push:
+				n = "PaintPusher";
+				break;
+		}
 
-  private XRNode HandNode;
+		foreach (var child in GetComponentsInChildren<Transform>(true))
+		{
+			if (child.gameObject.tag == "Behaviour")
+				child.gameObject.SetActive(child.gameObject.name == n);
+		}
+	}
 
-  void Start()
-  {
-    SetActiveBehaviour();
+	private XRNode HandNode;
 
-    if (PlayerScale == null)
-    {
-      Debug.Log("Hand requires Camera Parent's UniformScaler component");
-      enabled = false;
-      return;
-    }
+	void Start()
+	{
+		SetActiveBehaviour();
 
-    if (HandType == HandCode.Left)
-    {
-      HandNode = XRNode.LeftHand;
-      //TODO: Set input for left hand
-      //...
-    }
-    else
-    {
-      HandNode = XRNode.RightHand;
-      //TODO: Set input for right hand
-      //...
-    }
-  }
+		if (PlayerScale == null)
+		{
+			Debug.Log("Hand requires Camera Parent's UniformScaler component");
+			enabled = false;
+			return;
+		}
 
-  void Update()
-  {
-    if (UnparentFromVRController)
-      return;
+		if (HandType == HandCode.Left)
+		{
+			HandNode = XRNode.LeftHand;
+			//TODO: Set input for left hand
+			//...
+		}
+		else
+		{
+			HandNode = XRNode.RightHand;
+			//TODO: Set input for right hand
+			//...
+		}
 
-    var states = new List<XRNodeState>();
-    InputTracking.GetNodeStates(states);
+		TriggerHandler = GetComponentInChildren<CanvasTriggerHandler>();
+		if (Behaviour == BehaviourCode.Emit && TriggerHandler == null)
+		{
+			Debug.Log("Hand requires a child with CanvasTriggerHandler component");
+			enabled = false;
+			return;
+		}
+	}
 
-    foreach (var state in states)
-    {
-      if (state.nodeType == HandNode)
-      {
-        Vector3 pos;
-        if (state.TryGetPosition(out pos))
-          transform.position = pos * PlayerScale.UniformScale;
+	void Update()
+	{
+		isTriggerPressed = Input.GetAxisRaw(HandType == HandCode.Left
+			? "Left Trigger"
+			: "Right Trigger") > 0.3f;
+		if (Behaviour == BehaviourCode.Emit)
+		{
+			if (isTriggerPressed)
+				TriggerHandler.EnterEvent.Invoke();
+			else
+				TriggerHandler.ExitEvent.Invoke();
+		}
 
-        Quaternion rot;
-        if (state.TryGetRotation(out rot))
-          transform.rotation = rot;
-      }
-    }
-  }
+		if (UnparentFromVRController)
+			return;
+
+		var states = new List<XRNodeState>();
+		InputTracking.GetNodeStates(states);
+
+		foreach (var state in states)
+		{
+			if (state.nodeType == HandNode)
+			{
+				Vector3 pos;
+				if (state.TryGetPosition(out pos))
+					transform.position = pos * PlayerScale.UniformScale;
+
+				Quaternion rot;
+				if (state.TryGetRotation(out rot))
+					transform.rotation = rot;
+			}
+		}
+	}
 }
