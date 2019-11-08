@@ -38,20 +38,29 @@ namespace NVIDIA.Flex
     [AddComponentMenu("")]
     public class _auxFlexDetectShapes : MonoBehaviour
     {
+
+		//List<bool> touchedCanvas = new List<bool>();
+
+		Dictionary<int, Vector3> touchedCanvas = new Dictionary<int, Vector3>();
 		void doUpdateParticles(FlexContainer.ParticleData particleData, Collider collider)
 		{
+			
 			var fluidIndices = particleData.container.fluidIndices;
-			var fluidCount = particleData.container.fluidIndexCount;
-
+			//var fluidCount = particleData.container.fluidIndexCount;
+		
 			foreach (var i in fluidIndices)
 			{
 				Vector4 position = particleData.GetParticle(i);
-				Vector3 velocity = particleData.GetVelocity(i);
-
-				if (collider.bounds.SqrDistance(position) < 0.5)
+				//Vector3 velocity = particleData.GetVelocity(i);
+				//touchedCanvas.Add(i, i % 3 == 0);
+				//Vector3 result;
+				//touchedCanvas.TryGetValue(i, out result);
+				//particleData.container.
+				if (collider.bounds.SqrDistance(position) < 0.4 /*&& result != Vector3.zero*/)
 				{
+					Vector3 closest = collider.bounds.ClosestPoint(position);
 					//particleData.SetParticle(i, new Vector4(collider.transform.position.x, collider.transform.position.y, collider.transform.position.z + 0.5f, position.w));
-					particleData.SetVelocity(i, new Vector4(-position.x + collider.transform.position.x, -position.y + collider.transform.position.y, -position.z + collider.transform.position.z) * 200f);
+					particleData.SetVelocity(i, new Vector4(-position.x + closest.x, -position.y + closest.y, -position.z + closest.z) * 200f);
 				}
 			}
 		}
@@ -59,19 +68,24 @@ namespace NVIDIA.Flex
 		void onCanvasCollision(FlexContainer.ParticleData particleData, Collider collider)
 		{
 			var fluidIndices = particleData.container.fluidIndices;
-			var fluidCount = particleData.container.fluidIndexCount;
+			//var fluidCount = particleData.container.fluidIndexCount;
+			
 
 			foreach (var i in fluidIndices)
 			{
 				Vector4 position = particleData.GetParticle(i);
-				Vector3 velocity = particleData.GetVelocity(i);
-
+				//Vector3 velocity = particleData.GetVelocity(i);
+				
 				Vector3 closest = collider.bounds.ClosestPoint(position);
 
 				if (collider.bounds.SqrDistance(position) < 0.01)
 				{
 					//particleData.SetParticle(i, new Vector4(collider.transform.position.x, collider.transform.position.y, collider.transform.position.z + 0.5f, position.w));
 					particleData.SetVelocity(i, new Vector4(-position.x + closest.x, -position.y + closest.y, -position.z + closest.z) * 0.2f);
+					//if (i % 3 == 0)
+					//{
+					//	touchedCanvas[i] = velocity;
+					//}
 				}
 			}
 		}

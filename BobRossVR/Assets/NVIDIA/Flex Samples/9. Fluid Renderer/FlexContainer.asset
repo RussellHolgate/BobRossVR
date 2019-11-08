@@ -58,7 +58,7 @@ MonoBehaviour:
   m_drag: 0
   m_lift: 0
   m_fluid: 1
-  m_cohesion: 1
+  m_cohesion: 1.5
   m_surfaceTension: 0.1
   m_viscosity: 50
   m_vorticityConfinement: 2
