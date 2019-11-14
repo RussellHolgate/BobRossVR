@@ -1,0 +1,42 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWTexture2D<float4> dstTex;
+Texture2D<float4> srcTex;
+SamplerState samplersrcTex;
+
+
+[numthreads(8, 8, 1)]
+void CSMain(uint3 id : SV_DispatchThreadID)
+{
+	uint2 dim;
+	dstTex.GetDimensions(dim.x, dim.y);
+
+	float2 uv = (float2(id.x, id.y) + 0.5) / dim;
+
+	float3 srcColor = srcTex.SampleLevel(samplersrcTex, uv, 0);
+	float3 dstColor = dstTex[id.xy];
+
+	//float3 white = float3(1.0, 1.0, 1.0);
+	//float3 grey = float3(0.5, 0.5, 0.5);
+	//float3 black = float3(0.0, 0.0, 0.0);
+
+	//if (dstColor.x + dstColor.y + dstColor.z > 2.9)
+	//{
+	//	// dstColor is canvas
+	//	if (srcColor.x + srcColor.y + srcColor.z > 0.1)
+	//	{
+	//		// srcColor is empty
+	//		dstTex[id.xy] = float4(srcColor, 1);
+	//	}
+	//}
+
+	//dstTex[id.xy] = float4(max(dstColor, srcColor), 1);
+	float srcStrength = srcColor.x + srcColor.y + srcColor.z;
+	if (srcStrength > 1.0 && srcStrength < 2.0)
+	{
+		dstTex[id.xy] = float4(srcColor, 1);
+	}
+}
