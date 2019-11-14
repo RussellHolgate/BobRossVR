@@ -17,11 +17,15 @@ void CSMain(uint3 id : SV_DispatchThreadID)
 	float2 uv = (float2(id.x, id.y) + 0.5) / dim;
 
 	float3 srcColor = srcTex.SampleLevel(samplersrcTex, uv, 0);
+	
 	float3 dstColor = dstTex[id.xy];
 
-	//float3 white = float3(1.0, 1.0, 1.0);
+	float3 white = float3(1.0, 1.0, 1.0);
 	//float3 grey = float3(0.5, 0.5, 0.5);
-	//float3 black = float3(0.0, 0.0, 0.0);
+	float3 black = float3(0.0, 0.0, 0.0);
+	float3 red = float3(1.0, 0.0, 0.0);
+	float3 blue = float3(0.0, 1.0, 0.0);
+	float3 green = float3(0.0, 0.0, 1.0);
 
 	//if (dstColor.x + dstColor.y + dstColor.z > 2.9)
 	//{
@@ -35,8 +39,15 @@ void CSMain(uint3 id : SV_DispatchThreadID)
 
 	//dstTex[id.xy] = float4(max(dstColor, srcColor), 1);
 	float srcStrength = srcColor.x + srcColor.y + srcColor.z;
-	if (srcStrength > 1.0 && srcStrength < 2.0)
+	//dstTex[id.xy] = float4(max(dstColor, srcColor), 1);
+	float dstStrength = dstColor.x + dstColor.y + dstColor.z;
+
+	if (srcStrength >= 0.1 && srcStrength <= 2.5)
 	{
 		dstTex[id.xy] = float4(srcColor, 1);
+	}
+	else if (dstStrength < 0.1 || dstStrength > 2.5)
+	{
+		dstTex[id.xy] = float4(white, 1);
 	}
 }

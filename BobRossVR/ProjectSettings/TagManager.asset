@@ -16,7 +16,7 @@ TagManager:
   - 
   - PostProcessing
   - CanvasSrc
-  - CanvasDst
+  - DontPaint
   - 
   - 
   - 

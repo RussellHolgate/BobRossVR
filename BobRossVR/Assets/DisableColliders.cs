@@ -5,7 +5,7 @@ using UnityEngine;
 public class DisableColliders : MonoBehaviour
 {
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
 		var comps = GetComponentsInChildren<Collider>();
 		foreach(var comp in comps)

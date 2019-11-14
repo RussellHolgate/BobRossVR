@@ -60,7 +60,9 @@ namespace NVIDIA.Flex
 				{
 					Vector3 closest = collider.bounds.ClosestPoint(position);
 					//particleData.SetParticle(i, new Vector4(collider.transform.position.x, collider.transform.position.y, collider.transform.position.z + 0.5f, position.w));
-					particleData.SetVelocity(i, new Vector4(-position.x + closest.x, -position.y + closest.y, -position.z + closest.z) * 200f);
+					particleData.SetVelocity(i, new Vector4(-position.x + closest.x, -position.y + closest.y, -position.z + closest.z) * 20f);
+
+
 				}
 			}
 		}
@@ -81,12 +83,13 @@ namespace NVIDIA.Flex
 				if (collider.bounds.SqrDistance(position) < 0.01)
 				{
 					//particleData.SetParticle(i, new Vector4(collider.transform.position.x, collider.transform.position.y, collider.transform.position.z + 0.5f, position.w));
-					particleData.SetVelocity(i, new Vector4(-position.x + closest.x, -position.y + closest.y, -position.z + closest.z) * 0.2f);
+					particleData.SetVelocity(i, new Vector4(-position.x + closest.x, -position.y + closest.y, -position.z + closest.z) * 19f);
 					//if (i % 3 == 0)
 					//{
 					//	touchedCanvas[i] = velocity;
 					//}
 				}
+				
 			}
 		}
 
