@@ -11,12 +11,21 @@ public class Brush : MonoBehaviour {
     private enum Hand { LeftHand, RightHand };
     [SerializeField] private Hand _hand = Hand.RightHand;
 
+	private enum Color { Green, Red };
+	[SerializeField] private Color selectedColor = Color.Green;
+
     // Used to keep track of the current brush tip position and the actively drawing brush stroke
     private Vector3     _handPosition;
     private Quaternion  _handRotation;
     private BrushStroke _activeBrushStroke;
+	private List<FlexSourceActor> SourceActors;
 
-    private void Update() {
+	private void Start()
+	{
+		var SourceActors = gameObject.GetComponentsInChildren<FlexSourceActor>();
+	}
+
+	private void Update() {
         // Start by figuring out which hand we're tracking
         XRNode node    = _hand == Hand.LeftHand ? XRNode.LeftHand : XRNode.RightHand;
         string trigger = _hand == Hand.LeftHand ? "Left Trigger" : "Right Trigger";
@@ -30,12 +39,20 @@ public class Brush : MonoBehaviour {
         gameObject.GetComponent<Transform>().position = _handPosition;
         gameObject.GetComponent<Transform>().rotation = _handRotation;
 
+		
         // If we lose tracking, stop drawing
         if (!handIsTracking)
             triggerPressed = false;
 
-        // If the trigger is pressed and we haven't created a new brush stroke to draw, create one!
-        if (triggerPressed && gameObject.GetComponentInChildren<FlexSourceActor>().container.fluidIndexCount < gameObject.GetComponentInChildren<FlexSourceActor>().container.maxParticles) {
+
+		foreach (var sourceActor in SourceActors)
+		{
+			sourceActor.isActive = triggerPressed && sourceActor.container.fluidIndexCount < sourceActor.container.maxParticles;
+		}
+
+		// If the trigger is pressed and we haven't created a new brush stroke to draw, create one!
+		/*
+		if (triggerPressed && gameObject.GetComponentInChildren<FlexSourceActor>().container.fluidIndexCount < gameObject.GetComponentInChildren<FlexSourceActor>().container.maxParticles) {
             // Instantiate a copy of the Brush Stroke prefab.
             //GameObject brushStrokeGameObject = Instantiate(_brushStrokePrefab);
 
@@ -51,6 +68,7 @@ public class Brush : MonoBehaviour {
         {
             gameObject.GetComponentInChildren<FlexSourceActor>().isActive = false;
         }
+		*/
 
         // If the trigger is pressed, and we have a brush stroke, move the brush stroke to the new brush tip position
         //if (triggerPressed)
