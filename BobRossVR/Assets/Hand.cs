@@ -12,7 +12,7 @@ public class Hand : MonoBehaviour
 
 	public enum BehaviourCode { Emit, Push };
 	public BehaviourCode Behaviour = BehaviourCode.Emit;
-	private CanvasTriggerHandler TriggerHandler;
+	private CanvasTriggerHandler[] TriggerHandlers;
 
 	bool isTriggerPressed = false;
 
@@ -63,8 +63,8 @@ public class Hand : MonoBehaviour
 			//...
 		}
 
-		TriggerHandler = GetComponentInChildren<CanvasTriggerHandler>();
-		if (Behaviour == BehaviourCode.Emit && TriggerHandler == null)
+		TriggerHandlers = GetComponentsInChildren<CanvasTriggerHandler>();
+		if (Behaviour == BehaviourCode.Emit && TriggerHandlers.Length == 0)
 		{
 			Debug.Log("Hand requires a child with CanvasTriggerHandler component");
 			enabled = false;
@@ -80,28 +80,42 @@ public class Hand : MonoBehaviour
 		if (Behaviour == BehaviourCode.Emit)
 		{
 			if (isTriggerPressed)
-				TriggerHandler.EnterEvent.Invoke();
+			{
+				foreach (var TriggerHandler in TriggerHandlers)
+				{
+					TriggerHandler.EnterEvent.Invoke();
+				}
+			}
 			else
-				TriggerHandler.ExitEvent.Invoke();
+			{
+				foreach (var TriggerHandler in TriggerHandlers)
+				{
+					TriggerHandler.ExitEvent.Invoke();
+				}
+			}
 		}
 
 		if (UnparentFromVRController)
-			return;
-
-		var states = new List<XRNodeState>();
-		InputTracking.GetNodeStates(states);
-
-		foreach (var state in states)
 		{
-			if (state.nodeType == HandNode)
-			{
-				Vector3 pos;
-				if (state.TryGetPosition(out pos))
-					transform.position = pos * PlayerScale.UniformScale;
+			return;
+		}
+		else
+		{
+			var states = new List<XRNodeState>();
+			InputTracking.GetNodeStates(states);
 
-				Quaternion rot;
-				if (state.TryGetRotation(out rot))
-					transform.rotation = rot;
+			foreach (var state in states)
+			{
+				if (state.nodeType == HandNode)
+				{
+					Vector3 pos;
+					if (state.TryGetPosition(out pos))
+						transform.position = pos * PlayerScale.UniformScale;
+
+					Quaternion rot;
+					if (state.TryGetRotation(out rot))
+						transform.rotation = rot;
+				}
 			}
 		}
 	}
