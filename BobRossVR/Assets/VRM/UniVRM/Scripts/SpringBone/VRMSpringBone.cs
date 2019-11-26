@@ -13,8 +13,10 @@ namespace VRM
     [DefaultExecutionOrder(11000)]
     #endif
     public class VRMSpringBone : MonoBehaviour
-    {
-        [SerializeField]
+	{
+		//public Transform specialParentTransform;
+
+		[SerializeField]
         public string m_comment;
 
         [SerializeField, Header("Gizmo")]
@@ -59,8 +61,9 @@ namespace VRM
         /// 
         /// </summary>
         public class VRMSpringBoneLogic
-        {
-            Transform m_transform;
+		{
+			public Transform specialParentTransform;
+			Transform m_transform;
             public Transform Head
             {
                 get { return m_transform; }
@@ -176,13 +179,15 @@ namespace VRM
             protected virtual Vector3 Collision(BoxCollider box, Vector3 nextTail)
             {
                 var r = Radius + box.transform.localScale.y;
+				
                 if (Vector3.SqrMagnitude(nextTail - box.bounds.ClosestPoint(nextTail)) <= (0.0001f))
                 {
-                    var normal = (nextTail - box.transform.position).normalized;
-                    var posFromCollider = box.transform.position + (Vector3.one - ((normal * 2f) + new Vector3(1f, 1f, 1f))) * r;
-                    // 長さをboneLengthに強制
-                    nextTail = m_transform.position + (posFromCollider - m_transform.position).normalized * m_length;
-                }
+                    //var normal = (nextTail - box.transform.position).normalized;
+					//var posFromCollider = box.transform.position + Vector3.Cross(specialParentTransform.forward,normal).normalized * r;
+					// 長さをboneLengthに強制
+					//nextTail = m_transform.position + (posFromCollider - m_transform.position).normalized * m_length;
+
+				}
                 return nextTail;
 
             }
@@ -214,7 +219,17 @@ namespace VRM
             Setup();
         }
 
-        [ContextMenu("Reset bones")]
+		private void Start()
+		{
+			var brushnobrush = GameObject.Find("BrushNoBrush (1) 1");
+
+			for (int i = 0; i < m_verlet.Count; ++i)
+			{
+				m_verlet[i].specialParentTransform = brushnobrush.transform;
+			}
+		}
+
+		[ContextMenu("Reset bones")]
         public void Setup(bool force=false)
         {
             if (RootBones != null)
