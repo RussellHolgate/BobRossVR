@@ -92,6 +92,25 @@ namespace NVIDIA.Flex
 			}
 		}
 
+		//***
+		void cpu_fluid_collisions(ref Collider collider, ref FlexContainer.ParticleData _particleData, float pull_strength, float tolerance = 0.3f)
+		{
+			var fluidIndices = _particleData.container.fluidIndices;
+
+			foreach (var i in fluidIndices)
+			{
+				var position = (Vector3)_particleData.GetParticle(i);
+
+				var closest = collider.ClosestPoint(position);
+
+				if (Vector3.SqrMagnitude(position - closest) < tolerance)
+				{
+					var velocity = _particleData.GetVelocity(i);
+					_particleData.SetVelocity(i, velocity + (closest - position) * pull_strength);
+				}
+			}
+		}
+
 		#region Messages
 
 		void OnEnable()
@@ -132,15 +151,19 @@ namespace NVIDIA.Flex
             {
                 Collider collider = item.Key;
 
-				if (collider is SphereCollider)
+				if (collider.gameObject.tag == "mildly sticky")
 				{
-					doUpdateParticles(_particleData, collider);
+					cpu_fluid_collisions(ref collider, ref _particleData, 5.0f);
 				}
-				else if (collider.name == "Canvas")
+				else if (collider.gameObject.tag == "sticky")
 				{
-					onCanvasCollision(_particleData, collider);
+					cpu_fluid_collisions(ref collider, ref _particleData, 10.0f);
 				}
-                else if (/*!(collider is SphereCollider) && */!(collider is CapsuleCollider) && !(collider is BoxCollider) && !(collider is MeshCollider))
+				else if (collider.gameObject.tag == "very sticky")
+				{
+					cpu_fluid_collisions(ref collider, ref _particleData, 20.0f);
+				}
+				else if (/*!(collider is SphereCollider) && */!(collider is CapsuleCollider) && !(collider is BoxCollider) && !(collider is MeshCollider))
                     continue;
 
                 ++colliderCount;
