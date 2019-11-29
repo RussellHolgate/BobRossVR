@@ -904,7 +904,7 @@ namespace NVIDIA.Flex
         float m_particleFriction = 0.1f;
         [SerializeField, Tooltip("Coefficient of restitution used when colliding against shapes, particle collisions are always inelastic")]
         float m_restitution = 0.0f;
-        [SerializeField, Range(0.0f, 0.1f), Tooltip("Controls how strongly particles stick to surfaces they hit, default 0.0, range [0.0, +inf]")]
+        [SerializeField, Tooltip("Controls how strongly particles stick to surfaces they hit, default 0.0, range [0.0, +inf]")]
         float m_adhesion = 0.0f;
         [SerializeField, Tooltip("Particles with a velocity magnitude < this threshold will be considered fixed")]
         float m_sleepThreshold = 0.0f;
