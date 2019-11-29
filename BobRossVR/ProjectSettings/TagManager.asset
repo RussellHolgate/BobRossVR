@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Behaviour
+  - mildly sticky
+  - sticky
+  - very sticky
   layers:
   - Default
   - TransparentFX

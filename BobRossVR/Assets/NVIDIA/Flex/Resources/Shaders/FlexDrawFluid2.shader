@@ -296,13 +296,18 @@ fixed4 frag_surf (v2f_surf IN) : SV_Target {
     giInput.boxMin[1] = unity_SpecCube1_BoxMin;
     giInput.probePosition[1] = unity_SpecCube1_ProbePosition;
   #endif
+	o.Specular = 0;
+	o.Smoothness = 0;
+	o.Alpha = 1.0f;
   LightingStandardSpecular_GI(o, giInput, gi);
 
   // realtime lighting: call lighting function
-  c += LightingStandardSpecular (o, worldViewDir, gi);
+  //c += LightingStandardSpecular (o, worldViewDir, gi);
   c.rgb += o.Emission;
-  UNITY_APPLY_FOG(IN.fogCoord, c); // apply fog
-  UNITY_OPAQUE_ALPHA(c.a);
+  c.a = 1.0f; 
+  //c.rgb *= float3(0.2, 0.1, 0.01);	
+  //UNITY_APPLY_FOG(IN.fogCoord, c); // apply fog
+  //UNITY_OPAQUE_ALPHA(c.a);
   return c;
 }
 
@@ -462,10 +467,13 @@ fixed4 frag_surf (v2f_surf IN) : SV_Target {
       gi.light.dir = lightDir;
   #endif
   gi.light.color *= atten;
+  o.Specular = 0;
+  o.Smoothness = 0;
+  o.Alpha = 1.0f;
   c += LightingStandardSpecular (o, worldViewDir, gi);
-  c.a = 0.0;
+  c.a = 1.0;
   UNITY_APPLY_FOG(IN.fogCoord, c); // apply fog
-  UNITY_OPAQUE_ALPHA(c.a);
+  //UNITY_OPAQUE_ALPHA(c.a);
   return c;
 }
 
@@ -694,6 +702,9 @@ void frag_surf(v2f_surf IN,
     giInput.boxMin[1] = unity_SpecCube1_BoxMin;
     giInput.probePosition[1] = unity_SpecCube1_ProbePosition;
 #endif
+	o.Specular = 0;
+	o.Smoothness = 0;
+	o.Alpha = 1.0f;
     LightingStandardSpecular_GI(o, giInput, gi);
 
     // call lighting function to output g-buffer
@@ -968,6 +979,9 @@ fixed4 frag_surf (v2f_surf IN) : SV_Target {
 
   // call surface function
   surf (surfIN, o);
+  o.Specular = 0;
+  o.Smoothness = 0;
+  o.Alpha = 1.0f;
   UnityMetaInput metaIN;
   UNITY_INITIALIZE_OUTPUT(UnityMetaInput, metaIN);
   metaIN.Albedo = o.Albedo;
