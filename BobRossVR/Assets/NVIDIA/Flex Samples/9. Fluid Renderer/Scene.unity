@@ -2050,6 +2050,7 @@ Transform:
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   m_LocalPosition: {x: -0.518, y: 0.236, z: 0}
 =======
   m_LocalPosition: {x: -1.03, y: 0.463, z: -0.786}
@@ -2057,6 +2058,9 @@ Transform:
 =======
   m_LocalPosition: {x: -1.03, y: 0.463, z: -0.786}
 >>>>>>> parent of 806990f... ...
+=======
+  m_LocalPosition: {x: -0.518, y: 0.463, z: 0}
+>>>>>>> parent of 0d73c9b... Revert "improved fluid behaviours"
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.8}
   m_Children:
   - {fileID: 1376535247}
