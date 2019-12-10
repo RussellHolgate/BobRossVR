@@ -47,7 +47,7 @@ MonoBehaviour:
   m_dynamicFriction: 20
   m_particleFriction: 20
   m_restitution: 0
-  m_adhesion: 0.1
+  m_adhesion: 0.048
   m_sleepThreshold: 0
   m_maxSpeed: 3.402823e+38
   m_maxAcceleration: 3.4028235e+38

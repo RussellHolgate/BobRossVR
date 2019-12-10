@@ -95,6 +95,7 @@ namespace NVIDIA.Flex
 		//***
 		void cpu_fluid_collisions(ref Collider collider, ref FlexContainer.ParticleData _particleData, float pull_strength, float tolerance = 0.3f)
 		{
+			pull_strength *= Time.deltaTime * 100;
 			var fluidIndices = _particleData.container.fluidIndices;
 
 			foreach (var i in fluidIndices)
